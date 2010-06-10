@@ -1,4 +1,4 @@
-﻿using System.Windows;
+﻿﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -29,7 +29,10 @@ namespace EasyInstallIDE
 
       protected override object DefaultStyleKey
       {
-         get { return new ComponentResourceKey(GetType(), "TileView"); }
+         get
+         {
+            return new ComponentResourceKey(GetType(), "TileView");
+         }
       }
 
       protected override object ItemContainerDefaultStyleKey
