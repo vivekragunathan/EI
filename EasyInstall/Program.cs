@@ -33,6 +33,7 @@ namespace EasyInstall
             {
                p.Build(fs);
             }
+
             p.Deploy();
 
             Console.Write(p.ID);
