@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,7 +33,10 @@ namespace EasyInstallIDE
 
       protected override object DefaultStyleKey
       {
-         get { return new ComponentResourceKey(GetType(), "TileView"); }
+         get
+         {
+            return new ComponentResourceKey(GetType(), "TileView");
+         }
       }
 
       protected override object ItemContainerDefaultStyleKey
