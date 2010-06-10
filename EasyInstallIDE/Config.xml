@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <LibPaths>
+    <!-- <Path>C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.0</Path>-->
+    <Path>C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5</Path>
+  </LibPaths>
+  <Sources>
+    <Source>D:\Visual Studio 2008\Projects\EasyInstall\EasyInstallIDE\Setup\Setup.cs</Source>
+  </Sources>
+  <FrameworkAssemblies>
+    <Assembly>System.dll</Assembly>
+    <Assembly>System.Core.dll</Assembly>
+    <Assembly>System.Xml.dll</Assembly>
+    <Assembly>System.Runtime.Serialization.dll</Assembly>
+    <Assembly>System.Xml.Linq.dll</Assembly>
+  </FrameworkAssemblies>
+   <EmbeddedResources>
+   </EmbeddedResources>
+  <ExtAssemblies>
+    <Assembly>D:\Visual Studio 2008\Projects\EasyInstall\EasyInstallIDE\bin\Debug\EasyInstallLib.dll</Assembly>
+    <Assembly>D:\Visual Studio 2008\Projects\EasyInstall\EasyInstallIDE\bin\Debug\ICSharpCode.SharpZipLib.dll</Assembly>
+  </ExtAssemblies>
+  <Modules>
+    <!--<Module>..\..\..\EasyInstallLib\EasyInstall.netmodule</Module>-->
+  </Modules>
+</Configuration>

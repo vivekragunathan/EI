@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package Name="">
+   <File Path="[TF]\Core\Core.exe" Shortcut="true" />
+   <File Path="[TF]\Core\Core.exe" Register="true" />
+</Package>

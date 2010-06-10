@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="EasyInstall">
+</Property><Property Name="Solution File" Value="D:\Visual Studio 2008\Projects\EasyInstall\EasyInstall.sln">
+</Property><Property Name="Date" Value="Monday, April 19, 2010">
+</Property><Property Name="Time" Value="19:35 PM">
+</Property></Properties><Event ErrorLevel="0" Project="EasyInstallConsole" Source="EasyInstall\EasyInstallConsole.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="EasyInstallConsole" Source="EasyInstall\EasyInstallConsole.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="EasyInstallLib" Source="EasyInstallLib\EasyInstallLib.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="EasyInstallLib" Source="EasyInstallLib\EasyInstallLib.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SchemaEditor" Source="SchemaEditor\SchemaEditor.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SchemaEditor" Source="SchemaEditor\SchemaEditor.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="ViewModels" Source="EasyInstallViewModels\ViewModels.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="ViewModels" Source="EasyInstallViewModels\ViewModels.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="WPF.Themes" Source="WPF.Themes\WPF.Themes.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="WPF.Themes" Source="WPF.Themes\WPF.Themes.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="SetupPackager" Source="SetupPackager\SetupPackager.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="SetupPackager" Source="SetupPackager\SetupPackager.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="EasyInstallIDE" Source="EasyInstallIDE\EasyInstallIDE.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="EasyInstallIDE" Source="EasyInstallIDE\EasyInstallIDE.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="EasyInstallResources" Source="EasyInstallResources\EasyInstallResources.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="EasyInstallResources" Source="EasyInstallResources\EasyInstallResources.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="WPG" Source="WPG\WPG.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="WPG" Source="WPG\WPG.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="EasyInstallInterfaces" Source="EasyInstallInterfaces\EasyInstallInterfaces.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="EasyInstallInterfaces" Source="EasyInstallInterfaces\EasyInstallInterfaces.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="EasyInstall.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="EasyInstall.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="EasyInstallConsole" Source="EasyInstall\EasyInstallConsole.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="EasyInstallLib" Source="EasyInstallLib\EasyInstallLib.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SchemaEditor" Source="SchemaEditor\SchemaEditor.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="ViewModels" Source="EasyInstallViewModels\ViewModels.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="WPF.Themes" Source="WPF.Themes\WPF.Themes.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="SetupPackager" Source="SetupPackager\SetupPackager.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="EasyInstallIDE" Source="EasyInstallIDE\EasyInstallIDE.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="EasyInstallResources" Source="EasyInstallResources\EasyInstallResources.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="EasyInstallInterfaces" Source="EasyInstallInterfaces\EasyInstallInterfaces.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

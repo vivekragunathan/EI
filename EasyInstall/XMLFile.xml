@@ -1,0 +1,198 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet href="http://www.blogger.com/styles/atom.css" type="text/css"?>
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/' xmlns:georss='http://www.georss.org/georss' xmlns:thr='http://purl.org/syndication/thread/1.0'>
+  <id>tag:blogger.com,1999:blog-7248125602565639901</id>
+  <updated>2010-03-18T02:35:23.702-07:00</updated>
+  <title type='text'>Music and Code</title>
+  <subtitle type='html'>Sanjeev's blog of music and code</subtitle>
+  <link rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml' href='http://sanvenk.blogspot.com/feeds/posts/default'/>
+  <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default'/>
+  <link rel='alternate' type='text/html' href='http://sanvenk.blogspot.com/'/>
+  <link rel='hub' href='http://pubsubhubbub.appspot.com/'/>
+  <author>
+    <name>Sanjeev</name>
+    <uri>http://www.blogger.com/profile/12879650530818723739</uri>
+    <email>noreply@blogger.com</email>
+  </author>
+  <generator version='7.00' uri='http://www.blogger.com'>Blogger</generator>
+  <openSearch:totalResults>9</openSearch:totalResults>
+  <openSearch:startIndex>1</openSearch:startIndex>
+  <openSearch:itemsPerPage>25</openSearch:itemsPerPage>
+  <entry>
+    <id>tag:blogger.com,1999:blog-7248125602565639901.post-7681144789363455333</id>
+    <published>2010-03-17T11:16:00.000-07:00</published>
+    <updated>2010-03-18T02:33:21.715-07:00</updated>
+    <category scheme='http://www.blogger.com/atom/ns#' term='MVVM'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='WPF'/>
+    <title type='text'>A Smarter ViewModelBase</title>
+    <content type='html'>&lt;p style="font-family: Georgia;"&gt;The advent of WPF has led to ubiquity of the MVVM pattern. Developers usually have a ViewModelBase class the implements the INotifyPropertyChanged interface as shown below:-&lt;/p&gt;&lt;pre style="color: #006666; font-family: Consolas; font-size: 11pt;"&gt;class ViewModelBase : INotifyPropertyChanged&lt;br /&gt;{&lt;br /&gt;   public event PropertyChangedEventHandler PropertyChanged;&lt;br /&gt;&lt;br /&gt;   protected void NotifyPropertyChanged(string propertyName)&lt;br /&gt;   {&lt;br /&gt;      if (propertyName != null)&lt;br /&gt;      {&lt;br /&gt;         PropertyChanged(this, new PropertyChangedEventArgs(propertyName);&lt;br /&gt;      }&lt;br /&gt;   }&lt;br /&gt;}&lt;/pre&gt;&lt;p style="font-family: Georgia;"&gt;The NotifyPropertChanged method is called from within the "set accessor" of a property with the name of the property passed as a parameter.&lt;/p&gt;&lt;p style="font-family: Georgia;"&gt;The problem with this implementation is that if the property name "string" parameter has be be in sync with actual property name as an when it changes. We as developers are prone to spelling mistakes and could easily leave out some property change notifications out of sync with the property name.&lt;/p&gt;&lt;p style="font-family: Georgia;"&gt;The following code address the problem mentioned above&lt;/p&gt;&lt;pre style="color: blue; font-family: Consolas; font-size: 11pt;"&gt;class ViewModelBase : INotifyPropertyChanged&lt;br /&gt;{&lt;br /&gt;   private const string SetPropertyPrefix = "set_";&lt;br /&gt;&lt;br /&gt;   #region INotifyPropertyChanged Members&lt;br /&gt;&lt;br /&gt;   public event PropertyChangedEventHandler PropertyChanged;&lt;br /&gt;&lt;br /&gt;   #endregion&lt;br /&gt;&lt;br /&gt;   // Call this method from within a set accessor of a property&lt;br /&gt;   protected void NotifyCurrentPropertyChanged()&lt;br /&gt;   {&lt;br /&gt;      if (PropertyChanged == null)&lt;br /&gt;      {&lt;br /&gt;         return;&lt;br /&gt;      }&lt;br /&gt;&lt;br /&gt;      StackTrace st = new StackTrace(1);&lt;br /&gt;      StackFrame sf = st.GetFrame(0);&lt;br /&gt;      MethodBase mb = sf.GetMethod();&lt;br /&gt;&lt;br /&gt;      if (mb.MemberType == MemberTypes.Property)&lt;br /&gt;      {&lt;br /&gt;         // if the calling method is not an accessor of a property, do nothing&lt;br /&gt;         string methodName = mb.Name;&lt;br /&gt;         if (methodName.StartsWith(ViewModelBase.SetPropertyPrefix))&lt;br /&gt;         {&lt;br /&gt;            // We are bothered only with set accessors&lt;br /&gt;            string propertyName = methodName.Substring(ViewModelBase.SetPropertyPrefix.Length);&lt;br /&gt;            NotifyPropertyChanged(propertyName);&lt;br /&gt;         }&lt;br /&gt;      }&lt;br /&gt;   }&lt;br /&gt;&lt;br /&gt;   // The conventional NotifyPropertyChanged&lt;br /&gt;   protected void NotifyPropertyChanged(string propertyName)&lt;br /&gt;   {&lt;br /&gt;      if (PropertyChanged != null)&lt;br /&gt;      {&lt;br /&gt;         PropertyChanged(this, new PropertyChangedEventArgs(propertyName));&lt;br /&gt;      }&lt;br /&gt;   }&lt;br /&gt;}&lt;/pre&gt;&lt;p style="font-family: Georgia;"&gt;The NotifyCurrentPropertyChanged method can be used in the set accessors of properties. Note that there is no need to pass the propery name anymore!&lt;/p&gt;&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7248125602565639901-7681144789363455333?l=sanvenk.blogspot.com' alt='' /&gt;&lt;/div&gt;</content>
+    <link rel='replies' type='application/atom+xml' href='http://sanvenk.blogspot.com/feeds/7681144789363455333/comments/default' title='Post Comments'/>
+    <link rel='replies' type='text/html' href='http://sanvenk.blogspot.com/2010/03/advent-of-wpf-has-led-to-ubiquity-of.html#comment-form' title='0 Comments'/>
+    <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/7681144789363455333'/>
+    <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/7681144789363455333'/>
+    <link rel='alternate' type='text/html' href='http://sanvenk.blogspot.com/2010/03/advent-of-wpf-has-led-to-ubiquity-of.html' title='A Smarter ViewModelBase'/>
+    <author>
+      <name>Sanjeev</name>
+      <uri>http://www.blogger.com/profile/12879650530818723739</uri>
+      <email>noreply@blogger.com</email>
+      <gd:extendedProperty xmlns:gd='http://schemas.google.com/g/2005' name='OpenSocialUserId' value='04233467236805524217'/>
+    </author>
+    <thr:total>0</thr:total>
+  </entry>
+  <entry>
+    <id>tag:blogger.com,1999:blog-7248125602565639901.post-7104445224392504928</id>
+    <published>2010-03-16T03:03:00.000-07:00</published>
+    <updated>2010-03-16T03:20:26.970-07:00</updated>
+    <title type='text'>Thread.Suspend – Don’t call me anymore</title>
+    <content type='html'>&lt;p style="font-family: Tahoma;"&gt;Recently I ported our project from .NET 3.5 to .NET 3.5 SP1. Among the bunch of warnings, I found these interesting (to write about):-&lt;/p&gt;&lt;pre style="font-family: Consolas; color: rgb(255, 0, 0);"&gt;Thread.Suspend has been deprecated. Please use other classes in System.Threading, such&lt;br /&gt;as Monitor, Mutex, Event, and Semaphore, to synchronize Threads or protect resources.&lt;br /&gt;http://go.microsoft.com/fwlink/?linkid=14202&lt;br /&gt;&lt;br /&gt;Thread.Resume has been deprecated. Please use other classes in System.Threading, such&lt;br /&gt;as Monitor, Mutex, Event, and Semaphore, to synchronize Threads or protect resources.&lt;br /&gt;http://go.microsoft.com/fwlink/?linkid=14202"&lt;/pre&gt;&lt;p style="font-family: Tahoma;"&gt;I had used the &lt;span style="font-family: Consolas; font-size: 11pt;"&gt;&lt;a href="http://msdn.microsoft.com/en-us/library/system.threading.thread.suspend(VS.85).aspx" target="_blank"&gt;Thread.Suspend&lt;/a&gt;&lt;/span&gt; and &lt;span style="font-family: Consolas; font-size: 11pt;"&gt;&lt;a href="http://msdn.microsoft.com/en-us/library/system.threading.thread.resume(VS.85).aspx" target="_blank"&gt;Thread.Resume APIs&lt;/a&gt;&lt;/span&gt; in order to freeze operation (interaction with hardware) until the desired user input is received to continue. This is not a rogue programming model. In the Win32 world, despite the caveats raised for SuspendThread and ResumeThread, these APIs are not uncommon for tough guys. I have used it in my earlier projects. But it seems, in .NET world, we have to infer something from the above warnings. These native and low-level APIs seem to have some serious implications. My interpretation of this warning is Microsoft is not going to support this API anymore. Since the threading and runtime infrastructure is always undergoing (internal) changes, it seems to have a strong bearing on the behavior of the API. Besides, CLR thread may not be a Win32 thread physically. I have read that the CLR may use fibers, if possible. So the CLR safely withdraws from providing any more guarantees for platform specific low-level APIs.&lt;/p&gt;&lt;p style="font-family: Tahoma;"&gt;Now Let’s see what are the implications of using this API in our code&lt;br /&gt;&lt;/p&gt;&lt;p style="font-family: Tahoma;"&gt;With Thread.Suspend, we have explicit control over the execution of an arbitrary thread which is absolutely a dangerous thing. Thread.Suspend/Resume are very primitive and low level APIs to be used control the flow of a program. A thread may be executing any piece of code when it is being suspended, It may be executing a user code or an operating system code at the &lt;a href="http://msdn.microsoft.com/en-us/library/ms810029.aspx" target="_blank"&gt;User-Level IRQL&lt;/a&gt; or in a third-party library. Under these situations, the caller of Thread.Suspend is totally oblivious of the fact that the thread might be holding synchronization locks that are critical to the application/library and OS. This could result in deadlocks that are difficult to debug. All this is pointing towards one thing, an application is not well designed if it is using these APIs.&lt;br /&gt;&lt;/p&gt;&lt;p style="font-family: Tahoma;"&gt;If we want to synchronize threads, we should always resort to understanding the problem first and design a solution with the higher primitives provided by the framework like Mutex, Semaphores, critical sections and events etc; that is what is suggested by .NET with the above warnings. By using these high-level primitives, we delegate the lower-level responsibilities of suspending and resuming the threads to the Framework/OS. Besides making our code safe, we make our intent explicit. A few lines of explicit code is worth a ton of documentation!&lt;/p&gt;&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7248125602565639901-7104445224392504928?l=sanvenk.blogspot.com' alt='' /&gt;&lt;/div&gt;</content>
+    <link rel='replies' type='application/atom+xml' href='http://sanvenk.blogspot.com/feeds/7104445224392504928/comments/default' title='Post Comments'/>
+    <link rel='replies' type='text/html' href='http://sanvenk.blogspot.com/2010/03/recently-i-ported-our-project-from.html#comment-form' title='0 Comments'/>
+    <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/7104445224392504928'/>
+    <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/7104445224392504928'/>
+    <link rel='alternate' type='text/html' href='http://sanvenk.blogspot.com/2010/03/recently-i-ported-our-project-from.html' title='Thread.Suspend – Don’t call me anymore'/>
+    <author>
+      <name>Sanjeev</name>
+      <uri>http://www.blogger.com/profile/12879650530818723739</uri>
+      <email>noreply@blogger.com</email>
+      <gd:extendedProperty xmlns:gd='http://schemas.google.com/g/2005' name='OpenSocialUserId' value='04233467236805524217'/>
+    </author>
+    <thr:total>0</thr:total>
+  </entry>
+  <entry>
+    <id>tag:blogger.com,1999:blog-7248125602565639901.post-4214884571846590549</id>
+    <published>2009-10-05T21:48:00.000-07:00</published>
+    <updated>2010-03-16T03:38:36.985-07:00</updated>
+    <category scheme='http://www.blogger.com/atom/ns#' term='Sangeeth Sammelan'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='MUSIC CARNATIC'/>
+    <title type='text'>My first Sangeeth Sammelan concert</title>
+    <content type='html'>&lt;p&gt;I just came back after my first sangeeth sammelan concert held in New Delhi on 3rd october at FICCI auditorium organised by All India Radio. It will be relayed on Channel A from 10pm to 11pm on 3rd Nov 2009. I accompanied T.M. Krishna on the violin and Poongulam Subramaniam was on the mridangam. The concert went on very well and the hall was packed. The list is&lt;/p&gt;&lt;p&gt;1. Neelayadakshi - Paras - Syama Sasthri&lt;br /&gt;2. RTP - Begada - Adhi - Kailasapathe pasupathe umapathe namosthuthe&lt;br /&gt;3. Javali in Kaanada&lt;br /&gt; &lt;/p&gt;&lt;p&gt;His begada rendition was truly awesome and very inspiring. I heard a lot of new phrases. Poongulam subramainiam as usual was very supportive. It is after eleven years I am accompaniying T.M. Krishna (I started my career with him in the year 1998) and it was a truly amazing experience. Surprisingly he remebered it when I told him.&lt;/p&gt;&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7248125602565639901-4214884571846590549?l=sanvenk.blogspot.com' alt='' /&gt;&lt;/div&gt;</content>
+    <link rel='replies' type='application/atom+xml' href='http://sanvenk.blogspot.com/feeds/4214884571846590549/comments/default' title='Post Comments'/>
+    <link rel='replies' type='text/html' href='http://sanvenk.blogspot.com/2009/10/my-first-sangeeth-sammelan-concert.html#comment-form' title='0 Comments'/>
+    <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/4214884571846590549'/>
+    <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/4214884571846590549'/>
+    <link rel='alternate' type='text/html' href='http://sanvenk.blogspot.com/2009/10/my-first-sangeeth-sammelan-concert.html' title='My first Sangeeth Sammelan concert'/>
+    <author>
+      <name>Vivek Ragunathan</name>
+      <email>noreply@blogger.com</email>
+    </author>
+    <thr:total>0</thr:total>
+  </entry>
+  <entry>
+    <id>tag:blogger.com,1999:blog-7248125602565639901.post-1876324175504631691</id>
+    <published>2009-09-07T20:31:00.000-07:00</published>
+    <updated>2010-03-16T03:26:34.956-07:00</updated>
+    <category scheme='http://www.blogger.com/atom/ns#' term='decorator'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='template method'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='design patterns'/>
+    <title type='text'>“Please Don’t fail me!” – Decorator cries out to Template Method</title>
+    <content type='html'>&lt;p&gt;This article is a result of serendipity that I experienced when implementing a small framework. As an ardent fan of design patterns I tend to use them where ever I could. I had a few classes in my framework in which I used the “Template Method” Design Pattern. When I wanted to extend my classes without modifying them, the first pattern that came to my mind was the Decorator Design Pattern. This article explains what problems I encountered during this implementation and how they were circumvented. Do these patterns gel well?&lt;br /&gt;&lt;/p&gt;&lt;p&gt;Follow the link &lt;a href="http://www.codeproject.com/KB/architecture/DecoratorVsTemplateMethod.aspx"&gt;Decorator Vs Template Method&lt;/a&gt; to find out the answer.&lt;/p&gt;&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7248125602565639901-1876324175504631691?l=sanvenk.blogspot.com' alt='' /&gt;&lt;/div&gt;</content>
+    <link rel='replies' type='application/atom+xml' href='http://sanvenk.blogspot.com/feeds/1876324175504631691/comments/default' title='Post Comments'/>
+    <link rel='replies' type='text/html' href='http://sanvenk.blogspot.com/2010/03/please-dont-fail-me-decorator-cries-out.html#comment-form' title='0 Comments'/>
+    <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/1876324175504631691'/>
+    <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/1876324175504631691'/>
+    <link rel='alternate' type='text/html' href='http://sanvenk.blogspot.com/2010/03/please-dont-fail-me-decorator-cries-out.html' title='“Please Don’t fail me!” – Decorator cries out to Template Method'/>
+    <author>
+      <name>Vivek Ragunathan</name>
+      <email>noreply@blogger.com</email>
+    </author>
+    <thr:total>0</thr:total>
+  </entry>
+  <entry>
+    <id>tag:blogger.com,1999:blog-7248125602565639901.post-6994222744480811525</id>
+    <published>2009-08-21T23:48:00.000-07:00</published>
+    <updated>2010-03-17T01:36:58.105-07:00</updated>
+    <category scheme='http://www.blogger.com/atom/ns#' term='.net'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='xml'/>
+    <title type='text'>XML Configuration File Upgrade Technique</title>
+    <content type='html'>One of my colleagues asked me if there was a simple way to upgrade an xml configuration to one conforming to a new schema. Actually this is pretty easy and fun in .NET (if we use DataSets).&lt;br /&gt;Here is an example&lt;br /&gt;&lt;br /&gt;&lt;pre style="font-family: Consolas; font-size: 11pt;"&gt;&lt;b&gt;Old schema – OldEmployee.xsd&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;&amp;lt;?xml version="1.0" encoding="utf-8"?&amp;gt;&lt;br /&gt;&amp;lt;xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"&amp;nbsp;&lt;/pre&gt;&lt;pre style="font-family: Consolas; font-size: 11pt;"&gt;xmlns:xs="http://www.w3.org/2001/XMLSchema"&amp;gt;&lt;br /&gt;  &amp;lt;xs:element name="EmployeeDetails"&amp;gt;&lt;br /&gt;    &amp;lt;xs:complexType&amp;gt;&lt;br /&gt;      &amp;lt;xs:sequence&amp;gt;&lt;br /&gt;        &amp;lt;xs:element maxOccurs="unbounded" name="Employee"&amp;gt;&lt;br /&gt;          &amp;lt;xs:complexType&amp;gt;&lt;br /&gt;            &amp;lt;xs:sequence&amp;gt;&lt;br /&gt;              &amp;lt;xs:element name="Name" type="xs:string" /&amp;gt;&lt;br /&gt;              &amp;lt;xs:element name="Designation" type="xs:string" /&amp;gt;&lt;br /&gt;            &amp;lt;/xs:sequence&amp;gt;&lt;br /&gt;          &amp;lt;/xs:complexType&amp;gt;&lt;br /&gt;        &amp;lt;/xs:element&amp;gt;&lt;br /&gt;      &amp;lt;/xs:sequence&amp;gt;&lt;br /&gt;    &amp;lt;/xs:complexType&amp;gt;&lt;br /&gt;  &amp;lt;/xs:element&amp;gt;&lt;br /&gt;&amp;lt;/xs:schema&amp;gt;&lt;br /&gt;&lt;br /&gt;&lt;b&gt;New Schema – NewEmployee.xsd&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;&amp;lt;?xml version="1.0" encoding="utf-8"?&amp;gt;&lt;br /&gt;&amp;lt;xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"&amp;nbsp;&lt;/pre&gt;&lt;pre style="font-family: Consolas; font-size: 11pt;"&gt;xmlns:xs="http://www.w3.org/2001/XMLSchema"&amp;gt;&lt;br /&gt;  &amp;lt;xs:element name="EmployeeDetails"&amp;gt;&lt;br /&gt;    &amp;lt;xs:complexType&amp;gt;&lt;br /&gt;      &amp;lt;xs:sequence&amp;gt;&lt;br /&gt;        &amp;lt;xs:element maxOccurs="unbounded" name="Employee"&amp;gt;&lt;br /&gt;          &amp;lt;xs:complexType&amp;gt;&lt;br /&gt;            &amp;lt;xs:sequence&amp;gt;&lt;br /&gt;              &amp;lt;xs:element name="Name" type="xs:string" /&amp;gt;&lt;br /&gt;              &amp;lt;xs:element name="Designation" type="xs:string" /&amp;gt;&lt;br /&gt;              &amp;lt;xs:element name="Age" type="xs:positiveInteger" default="40"/&amp;gt;&lt;br /&gt;              &amp;lt;xs:element name="Gender" type="xs:string" default="Male"/&amp;gt;&lt;br /&gt;            &amp;lt;/xs:sequence&amp;gt;&lt;br /&gt;          &amp;lt;/xs:complexType&amp;gt;&lt;br /&gt;        &amp;lt;/xs:element&amp;gt;&lt;br /&gt;      &amp;lt;/xs:sequence&amp;gt;&lt;br /&gt;    &amp;lt;/xs:complexType&amp;gt;&lt;br /&gt;  &amp;lt;/xs:element&amp;gt;&lt;br /&gt;&amp;lt;/xs:schema&amp;gt;&lt;/pre&gt;The following code&lt;br /&gt;&lt;br /&gt;&lt;ul&gt;&lt;li&gt;Reads the old schema into a data set&lt;/li&gt;&lt;li&gt;Reads the old XML file (conforming to the old schema)&lt;/li&gt;&lt;li&gt;Reads the new schema into a new data set&lt;/li&gt;&lt;li&gt;Performs a merge on the new data set merging the old dataset&lt;/li&gt;&lt;li&gt;Outputs the upgraded XML configuration file&lt;/li&gt;&lt;/ul&gt;&lt;pre style="font-family: Consolas; font-size: 11pt;"&gt;using System.Data;&lt;br /&gt;&lt;br /&gt;namespace ConfigFileUpgrade&lt;br /&gt;{&lt;br /&gt;   class Program&lt;br /&gt;   {&lt;br /&gt;      static void Main(string[] args)&lt;br /&gt;      {&lt;br /&gt;         DataSet dsOld = new DataSet();&lt;br /&gt;         dsOld.ReadXmlSchema("OldEmployee.xsd");&lt;br /&gt;         // Now lets try to read an XML conforming to this schema&lt;br /&gt;         dsOld.ReadXml("OldEmployee.xml", XmlReadMode.Auto);&lt;br /&gt;&lt;br /&gt;         // We create a new dataset and assign the new schema to it&lt;br /&gt;         // This data set will not contain any data since we have read only the schema&lt;br /&gt;         DataSet dsNew = new DataSet();&lt;br /&gt;         dsNew.ReadXmlSchema("NewEmployee.xsd");&lt;br /&gt;&lt;br /&gt;         // We merge the old data set with the new data&lt;br /&gt;         // all the data in the old data set now gets merged to the new data set with&lt;br /&gt;         // the new schema&lt;br /&gt;         dsNew.Merge(dsOld, false, MissingSchemaAction.Add);&lt;br /&gt;&lt;br /&gt;         // Upgrade is complete&lt;br /&gt;         dsNew.WriteXml("NewEmployee.xml");&lt;br /&gt;      }&lt;br /&gt;   }&lt;br /&gt;}&lt;/pre&gt;&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7248125602565639901-6994222744480811525?l=sanvenk.blogspot.com' alt='' /&gt;&lt;/div&gt;</content>
+    <link rel='replies' type='application/atom+xml' href='http://sanvenk.blogspot.com/feeds/6994222744480811525/comments/default' title='Post Comments'/>
+    <link rel='replies' type='text/html' href='http://sanvenk.blogspot.com/2009/08/xml-configuration-file-upgrade.html#comment-form' title='0 Comments'/>
+    <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/6994222744480811525'/>
+    <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/6994222744480811525'/>
+    <link rel='alternate' type='text/html' href='http://sanvenk.blogspot.com/2009/08/xml-configuration-file-upgrade.html' title='XML Configuration File Upgrade Technique'/>
+    <author>
+      <name>Vivek Ragunathan</name>
+      <email>noreply@blogger.com</email>
+    </author>
+    <thr:total>0</thr:total>
+  </entry>
+  <entry>
+    <id>tag:blogger.com,1999:blog-7248125602565639901.post-6920763938834832347</id>
+    <published>2009-08-20T02:36:00.000-07:00</published>
+    <updated>2010-03-16T02:57:06.103-07:00</updated>
+    <category scheme='http://www.blogger.com/atom/ns#' term='performance'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='.net'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='regex'/>
+    <title type='text'>Increasing performance (.NET Regular Expressions)</title>
+    <content type='html'>&lt;div style="font-family: Tahoma;"&gt;I just discovered that the .NET Regex class offers a static method (CompileToAssembly) to compile a regular expression to an assembly for increased performance. Here is a sample code.&lt;/div&gt;&lt;pre style="font-family: Consolas; font-size: 11pt;"&gt;using System;&lt;br /&gt;using System.Text.RegularExpressions;&lt;br /&gt;using System.Reflection;&lt;br /&gt;&lt;br /&gt;namespace CompiledRegEx&lt;br /&gt;{&lt;br /&gt;   class Program&lt;br /&gt;   {&lt;br /&gt;      static void Main(string[] args)&lt;br /&gt;      {&lt;br /&gt;         if ( args.Length &amp;lt; 5 )&lt;br /&gt;         {&lt;br /&gt;            Console.WriteLine("Error: Insufficient Parameters. \nUsage: rexc ");&lt;br /&gt;            return;&lt;br /&gt;         }&lt;br /&gt;&lt;br /&gt;         string pattern = args[0];&lt;br /&gt;         string options = args[1];&lt;br /&gt;         string className = args[2];&lt;br /&gt;         string namespaceName = args[3];&lt;br /&gt;         string assemblyName = args[4];&lt;br /&gt;&lt;br /&gt;         RegexCompilationInfo ri = new RegexCompilationInfo(pattern,&lt;br /&gt;            (RegexOptions)Convert.ToInt32(options),&lt;br /&gt;            className,&lt;br /&gt;            namespaceName,&lt;br /&gt;            true);&lt;br /&gt;&lt;br /&gt;         Regex.CompileToAssembly(new RegexCompilationInfo[] { ri },&lt;br /&gt;            new AssemblyName(assemblyName));&lt;br /&gt;&lt;br /&gt;         Console.WriteLine("Regular Expression successfully compiled to an assembly");&lt;br /&gt;      }&lt;br /&gt;   }&lt;br /&gt;}&lt;/pre&gt;&lt;div style="font-family: Tahoma;"&gt;You can now use the new type from the compiled assembly just as you would use any other type from an assembly. The Match method of the new RegEx type does not take the pattern as a parameter. If you use a lot of static regular expressions in your code, this can provide significant gain in performance.&lt;/div&gt;&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7248125602565639901-6920763938834832347?l=sanvenk.blogspot.com' alt='' /&gt;&lt;/div&gt;</content>
+    <link rel='replies' type='application/atom+xml' href='http://sanvenk.blogspot.com/feeds/6920763938834832347/comments/default' title='Post Comments'/>
+    <link rel='replies' type='text/html' href='http://sanvenk.blogspot.com/2009/08/increasing-performance-net-regular.html#comment-form' title='0 Comments'/>
+    <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/6920763938834832347'/>
+    <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/6920763938834832347'/>
+    <link rel='alternate' type='text/html' href='http://sanvenk.blogspot.com/2009/08/increasing-performance-net-regular.html' title='Increasing performance (.NET Regular Expressions)'/>
+    <author>
+      <name>Sanjeev</name>
+      <uri>http://www.blogger.com/profile/12879650530818723739</uri>
+      <email>noreply@blogger.com</email>
+      <gd:extendedProperty xmlns:gd='http://schemas.google.com/g/2005' name='OpenSocialUserId' value='04233467236805524217'/>
+    </author>
+    <thr:total>0</thr:total>
+  </entry>
+  <entry>
+    <id>tag:blogger.com,1999:blog-7248125602565639901.post-9174882071366248133</id>
+    <published>2009-08-17T17:44:00.000-07:00</published>
+    <updated>2010-03-16T03:42:46.963-07:00</updated>
+    <category scheme='http://www.blogger.com/atom/ns#' term='synchronization'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='.net'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='events'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='threading'/>
+    <title type='text'>Auto and Manual Reset Events Revisited</title>
+    <content type='html'>&lt;p&gt;Just posted as article for Code Project on Auto and Manual Reset Events. I ended up writing this article after my bitter experience with analyzing some other group's log files and finding out the problem in their code was due to improper use of Manual Reset events.&lt;/p&gt;&lt;p&gt;Click &lt;a href="http://www.codeproject.com/KB/threads/AutoManualResetEvents.aspx " target="_blank"&gt;HERE&lt;/a&gt; to read the article at CodeProject.&lt;/p&gt;&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7248125602565639901-9174882071366248133?l=sanvenk.blogspot.com' alt='' /&gt;&lt;/div&gt;</content>
+    <link rel='replies' type='application/atom+xml' href='http://sanvenk.blogspot.com/feeds/9174882071366248133/comments/default' title='Post Comments'/>
+    <link rel='replies' type='text/html' href='http://sanvenk.blogspot.com/2009/08/auto-and-manual-reset-events-revisited.html#comment-form' title='0 Comments'/>
+    <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/9174882071366248133'/>
+    <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/9174882071366248133'/>
+    <link rel='alternate' type='text/html' href='http://sanvenk.blogspot.com/2009/08/auto-and-manual-reset-events-revisited.html' title='Auto and Manual Reset Events Revisited'/>
+    <author>
+      <name>Vivek Ragunathan</name>
+      <email>noreply@blogger.com</email>
+    </author>
+    <thr:total>0</thr:total>
+  </entry>
+  <entry>
+    <id>tag:blogger.com,1999:blog-7248125602565639901.post-4962419299143105225</id>
+    <published>2009-08-17T00:00:00.000-07:00</published>
+    <updated>2010-03-16T03:47:32.288-07:00</updated>
+    <title type='text'>Type Safe Logging in C++</title>
+    <content type='html'>My Friend &lt;a href="http:\\developerexperience.blogspot.com"&gt;Vivek&lt;/a&gt; and I authored an article for Code Project. It is about &lt;a href="http://www.codeproject.com/KB/cpp/TypeSafeLogger.aspx" target="_blank"&gt;Type Safe Logging in C++&lt;/a&gt;.&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7248125602565639901-4962419299143105225?l=sanvenk.blogspot.com' alt='' /&gt;&lt;/div&gt;</content>
+    <link rel='replies' type='application/atom+xml' href='http://sanvenk.blogspot.com/feeds/4962419299143105225/comments/default' title='Post Comments'/>
+    <link rel='replies' type='text/html' href='http://sanvenk.blogspot.com/2009/08/type-safe-logging-in-c.html#comment-form' title='0 Comments'/>
+    <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/4962419299143105225'/>
+    <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/4962419299143105225'/>
+    <link rel='alternate' type='text/html' href='http://sanvenk.blogspot.com/2009/08/type-safe-logging-in-c.html' title='Type Safe Logging in C++'/>
+    <author>
+      <name>Vivek Ragunathan</name>
+      <email>noreply@blogger.com</email>
+    </author>
+    <thr:total>0</thr:total>
+  </entry>
+  <entry>
+    <id>tag:blogger.com,1999:blog-7248125602565639901.post-6786955574620756962</id>
+    <published>2009-08-16T23:17:00.000-07:00</published>
+    <updated>2010-03-16T03:44:35.870-07:00</updated>
+    <category scheme='http://www.blogger.com/atom/ns#' term='WPF'/>
+    <category scheme='http://www.blogger.com/atom/ns#' term='Data Binding'/>
+    <title type='text'>WPF data Binding using Custom Expressions</title>
+    <content type='html'>&lt;p&gt;I was searching the web for some information about how to perform WPF data Binding using custom expressions. I came across an excellent article that explains this.&lt;/p&gt;Here is the link: &lt;a href="http://www.11011.net/wpf-binding-expressions" target="_blank"&gt;http://www.11011.net/wpf-binding-expressions&lt;/a&gt;&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/7248125602565639901-6786955574620756962?l=sanvenk.blogspot.com' alt='' /&gt;&lt;/div&gt;</content>
+    <link rel='replies' type='application/atom+xml' href='http://sanvenk.blogspot.com/feeds/6786955574620756962/comments/default' title='Post Comments'/>
+    <link rel='replies' type='text/html' href='http://sanvenk.blogspot.com/2009/08/wpf-data-binding-using-custom.html#comment-form' title='0 Comments'/>
+    <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/6786955574620756962'/>
+    <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/7248125602565639901/posts/default/6786955574620756962'/>
+    <link rel='alternate' type='text/html' href='http://sanvenk.blogspot.com/2009/08/wpf-data-binding-using-custom.html' title='WPF data Binding using Custom Expressions'/>
+    <author>
+      <name>Vivek Ragunathan</name>
+      <email>noreply@blogger.com</email>
+    </author>
+    <thr:total>0</thr:total>
+  </entry>
+</feed>

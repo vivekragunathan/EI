@@ -1,0 +1,146 @@
+﻿<!--themes:ThemeManager.Theme="{Binding ElementName=Themes, Path=SelectedItem}"-->
+
+<Window x:Class="EasyInstallIDE.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:themes="clr-namespace:WPF.Themes;assembly=WPF.Themes"
+    xmlns:local="clr-namespace:EasyInstallIDE"
+    xmlns:vm="clr-namespace:EasyInstall.ViewModels;assembly=EasyInstallViewModels"
+    xmlns:eic="clr-namespace:EasyInstall.Controls;assembly=EasyInstallResources"
+    xmlns:ad="clr-namespace:AvalonDock;assembly=AvalonDock" 
+    xmlns:wpg="clr-namespace:WPG;assembly=WPG"
+    Title="EasyInstall" Height="720" Width="909" xmlns:my="clr-namespace:AvalonDock;assembly=AvalonDock" Loaded="Window_Loaded" SizeToContent="WidthAndHeight" WindowState="Maximized">
+    <Window.Resources>
+        <SolidColorBrush x:Key="WorkAreaBack" Color="SeaShell"/>
+        <vm:EntitySchemaCollection x:Key="SchemaCollection"/>
+        <local:EntityTypeToImageSourceConverter x:Key="EntityImageConverter"/>
+        <local:TileView x:Key="ImageView">
+            <local:TileView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Width="150" VerticalAlignment="Top">
+                        <!--<Image Source="{Binding Path=ProductImagePath, Converter={StaticResource ImagePathConverter}}"></Image>-->
+                        <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center"  Text="{Binding Path=ModelName}" ></TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </local:TileView.ItemTemplate>
+        </local:TileView>
+
+        <local:TileView x:Key="ImageDetailView" SelectedBackground="LightSteelBlue">
+            <local:TileView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" MinHeight="20" MinWidth="50">
+                        <TextBlock FontWeight="Bold" Text="{Binding Path=Schema}" Foreground="Black"></TextBlock>
+                    </StackPanel>
+                </DataTemplate>
+            </local:TileView.ItemTemplate>
+        </local:TileView>
+
+        <GridView x:Key="GridView">
+            <GridView.Columns>
+                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=ModelName}" />
+                <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=ModelNumber}" />
+            </GridView.Columns>
+        </GridView>
+
+    </Window.Resources>
+    <DockPanel Name="mainPanel">
+        <Menu Name="menu1" DockPanel.Dock="Top" MinHeight="25" MaxHeight="25">
+            <MenuItem Header="File">
+                <MenuItem Header="New Package..." Command="ApplicationCommands.New"></MenuItem>
+                <MenuItem Header="Open Package..." Command="ApplicationCommands.Open"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Save Package" Command="ApplicationCommands.Save"></MenuItem>
+                <MenuItem Header="Save Package As..." Command="ApplicationCommands.SaveAs"></MenuItem>
+                <MenuItem Header="Close..." Command="ApplicationCommands.Close"></MenuItem>
+                <Separator></Separator>
+                <MenuItem Header="Exit..." ></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Edit"></MenuItem>
+            <MenuItem Header="View"></MenuItem>
+            <MenuItem Header="Project"></MenuItem>
+            <MenuItem Header="Help"></MenuItem>
+        </Menu>
+
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar MinHeight="25" Name="ThemeSelector">
+                <ComboBox x:Name="Themes" Margin="5,1,1,1" Padding="2" SelectionChanged="Themes_SelectionChanged"></ComboBox>
+            </ToolBar>
+            <ToolBar Name="Entities">
+
+            </ToolBar>
+        </ToolBarTray>
+        <StatusBar DockPanel.Dock="Bottom" MinHeight="25"></StatusBar>
+        <Grid Name="Workspace">
+            <my:DockingManager Name="dockingManager1" >
+                <ad:ResizingPanel Orientation="Vertical">
+                    <ad:ResizingPanel Orientation="Horizontal" >
+                        <ad:DockablePane>
+                            <ad:DockableContent Title="Entities">
+                                <ListBox Grid.Column="0" MinWidth="50" Background="Beige" 
+                          HorizontalAlignment="Stretch" ForceCursor="False"
+                          ItemsSource="{Binding Source={StaticResource SchemaCollection}}"
+                          DisplayMemberPath="Schema.EntityType"
+                          >
+                                </ListBox>
+                            </ad:DockableContent>
+                        </ad:DockablePane>
+                        <ad:DocumentPane>
+                            <ad:DocumentContent Title="{Binding Path=Entity.Name}">
+                                <TreeView Name="TreeWorkArea" Grid.Column="2" MinWidth="550" HorizontalAlignment="Stretch"
+                          ItemContainerStyle="{StaticResource TreeViewItemStyle}" Background="{StaticResource WorkAreaBack}"
+                          ItemsSource="{Binding .}" MouseRightButtonUp="TreeWorkArea_MouseRightButtonUp" AllowDrop="True" KeyDown="TreeWorkArea_KeyDown"
+                                          TreeViewItem.Selected="TreeWorkArea_Selected" GiveFeedback="TreeWorkArea_GiveFeedback" DragOver="TreeWorkArea_DragOver" DragEnter="TreeWorkArea_DragEnter" Drop="TreeWorkArea_Drop">
+                                          
+                                    <TreeView.ItemTemplate>
+                                        <HierarchicalDataTemplate ItemsSource="{Binding Path=SubEntities}">
+                                            <AdornerDecorator>
+                                                <ContentPresenter Tag="{Binding .}" ContextMenuOpening="TreeView_ContextMenuOpening">
+                                                    <ContentPresenter.Content>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Image Source="{Binding Path=Entity.Schema.EntityType, Converter={StaticResource EntityImageConverter}}" 
+                                                               MaxHeight="18" MaxWidth="18" />
+                                                            <eic:EditableTextBlock Text="{Binding Path=Entity.Name, Mode=TwoWay}" 
+                                                                                  Margin="3"></eic:EditableTextBlock>
+                                                        </StackPanel>
+                                                    </ContentPresenter.Content>
+                                                </ContentPresenter>
+                                            </AdornerDecorator>
+
+                                        </HierarchicalDataTemplate>
+                                    </TreeView.ItemTemplate>
+                                </TreeView>
+                            </ad:DocumentContent>
+                        </ad:DocumentPane>
+                        <ad:DockablePane>
+                            <ad:DockableContent Title="Properties">
+                                <wpg:PropertyGrid Instance="{Binding ElementName=TreeWorkArea, Path=SelectedItem}"/>
+                            </ad:DockableContent>
+                        </ad:DockablePane>
+                    </ad:ResizingPanel>
+                    <ad:DockablePane>
+                        <ad:DockableContent Title="Output" >
+                            <TextBox>
+
+                            </TextBox>
+                        </ad:DockableContent>
+                    </ad:DockablePane>
+                </ad:ResizingPanel>
+            </my:DockingManager>
+        </Grid>
+
+    </DockPanel>
+
+    <Window.CommandBindings>
+        <CommandBinding x:Name="NewCommand" Command="ApplicationCommands.New" Executed="NewCommand_Executed"/>
+        <CommandBinding x:Name="OpenCommand" Command="ApplicationCommands.Open" Executed="OpenCommand_Executed"/>
+        <CommandBinding x:Name="SaveCommand" Command="ApplicationCommands.Save" Executed="SaveCommand_Executed" CanExecute="SaveCommand_CanExecute"/>
+        <CommandBinding x:Name="SaveAsCommand" Command="ApplicationCommands.SaveAs" Executed="SaveAsCommand_Executed"/>
+        <CommandBinding x:Name="CloseCommand" Command="ApplicationCommands.Close" Executed="CloseCommand_Executed"/>
+        <CommandBinding x:Name="AddFileEntityCommand" Command="vm:Commands.AddFileEntity" Executed="AddFileEntityCommand_Executed" CanExecute="AddFileEntityCommand_CanExecute"/>
+        <CommandBinding x:Name="AddFolderEntityCommand" Command="vm:Commands.AddFolderEntity" Executed="AddFolderEntityCommand_Executed" CanExecute="AddFolderEntityCommand_CanExecute"/>
+        <CommandBinding x:Name="RemoveEntityCommand" Command="vm:Commands.RemoveEntity" Executed="RemoveEntityCommand_Executed" CanExecute="RemoveEntityCommand_CanExecute"/>
+        <CommandBinding x:Name="RemoveAllEntitiesCommand" Command="vm:Commands.RemoveAllEntities" Executed="RemoveAllEntitiesCommand_Executed" CanExecute="RemoveAllEntitiesCommand_CanExecute"/>
+        <!--<CommandBinding x:Name="RenameEntityCommand" Command="vm:Commands.RenameEntity" Executed="RenameEntityCommand_Executed" CanExecute="RenameEntityCommand_CanExecute"/>-->
+
+    </Window.CommandBindings>
+</Window>

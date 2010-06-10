@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Schemas>
+  <Package>
+    <DeploymentFolder AllowNull="false" Type="System.String" DefaultValue="" IsReadOnly="false"/>
+  </Package>
+
+  <File Category="Folders and Files">
+    <MustBeDeployed AllowNull="false" Type="System.Boolean" DefaultValue="true" IsReadOnly="false"/>
+    <SourcePath AllowNull="false" Type="System.String" DefaultValue="" IsReadOnly="false"/>
+    <DestinationPath AllowNull="false" Type="System.String" DefaultValue="" IsReadOnly="true"/>
+    <FileName AllowNull="false" Type="System.String" DefaultValue="" IsReadOnly="false"/>
+    <Register AllowNull="true" Type="System.Boolean" DefaultValue="false" IsReadOnly="false"/>
+    <IsService AllowNull="true" Type="System.Boolean" DefaultValue="false" IsReadOnly="false"/>
+    <DeployIfNewer AllowNull="false" Type="System.Boolean" DefaultValue="false" IsReadOnly="false"/>
+  </File>
+
+  <Folder Category="Folders and Files">
+    <MustBeDeployed AllowNull="false" Type="System.Boolean" DefaultValue="true" IsReadOnly="false"/>
+    <SourceFolder AllowNull="false" Type="System.String" DefaultValue="" IsReadOnly="false"/>
+    <DestinationFolder AllowNull="false" Type="System.String" DefaultValue="" IsReadOnly="true"/>
+    <FolderName AllowNull="false" Type="System.String" DefaultValue="" IsReadOnly="false"/>
+    <SupportedSubEntities>
+      <File />
+      <Folder />
+    </SupportedSubEntities>
+  </Folder>
+
+  <RegistryKey Category="Registry">
+    <MustBeDeployed AllowNull="false" Type="System.Boolean" DefaultValue="true" IsReadOnly="false"/>
+    <HivePath AllowNull="false" Type="System.String" DefaultValue="" IsReadOnly="false" />
+    <SupportedSubEntities>
+      <RegistryValue />
+    </SupportedSubEntities>
+  </RegistryKey>
+
+  <RegistryValue Category="Registry">
+    <MustBeDeployed AllowNull="false" Type="System.Boolean" DefaultValue="true" IsReadOnly="false"/>
+    <HivePath AllowNull="false" Type="System.String" DefaultValue="" IsReadOnly="false" />
+    <Name AllowNull="false" Type="System.String" DefaultValue="" IsReadOnly="false" />
+    <RegType AllowNull="false" Type="Microsoft.Win32.RegistryValueKind" DefaultValue="String" IsReadOnly="false" />
+    <Value AllowNull="true" Type="System.Object" DefaultValue="" IsReadOnly="false" />
+  </RegistryValue>
+</Schemas>

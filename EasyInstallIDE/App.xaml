@@ -1,0 +1,13 @@
+﻿<Application x:Class="EasyInstallIDE.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    StartupUri="MainWindow/Window1.xaml" Exit="Application_Exit">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/EasyInstallResources;component/Styles/Styles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/EasyInstallResources;component/Styles/Simple Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
