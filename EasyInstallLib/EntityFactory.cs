@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using EasyInstall.Interfaces;
-using System.Runtime.InteropServices.ComTypes;
 using System.IO;
 
 namespace EasyInstall
@@ -17,19 +14,18 @@ namespace EasyInstall
 
       internal static IEntity CreateEntity(string entityType, string name, IPackage package, Guid parentID, object createParams)
       {
-         EntitySchema schema = EntitySchema.GetSchema(entityType);
-
-         switch (entityType)
-         {
-            case EntityTypes.FILEENTITY:
-               {
-                  return new FileEntity(name, package, parentID, createParams);
-               }
-            case EntityTypes.FOLDERENTITY:
-               {
-                  return new FolderEntity(name, package, parentID, createParams);
-               }
-         }
+         if (entityType != null)
+            switch (entityType)
+            {
+               case EntityTypes.FILEENTITY:
+                  {
+                     return new FileEntity(name, package, parentID, createParams);
+                  }
+               case EntityTypes.FOLDERENTITY:
+                  {
+                     return new FolderEntity(name, package, parentID, createParams);
+                  }
+            }
 
          throw new Exception("Entity type not supported!");
       }
@@ -42,12 +38,12 @@ namespace EasyInstall
 
          // Right now we will support only File and Folder entities in this method
 
-         List<string> entities = new List<string>();
+         var entities = new List<string>();
 
          if ( o == null )
             return entities;
 
-         string path = o.ToString();
+         var path = o.ToString();
 
          if ( Path.GetFileName(path) != string.Empty )
          {
@@ -69,7 +65,6 @@ namespace EasyInstall
          }
 
          return entities;
-
       }
    }
 }
