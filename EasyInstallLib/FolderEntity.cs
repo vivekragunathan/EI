@@ -75,8 +75,8 @@ namespace EasyInstall
          //
          if ( parentID == Package.ID )
          {
-            EntitySchema newSchema = (EntitySchema)(Schema as IMutableEntitySchema).Copy();
-            SchemaItemInfo itemInfo= newSchema.Attributes.First((e) => e.Key == "DestinationFolder").Value;
+            var newSchema = (EntitySchema)(Schema as IMutableEntitySchema).Copy();
+            var itemInfo = newSchema.Attributes.First((e) => e.Key == "DestinationFolder").Value;
             itemInfo.IsReadonly = false;
 
             OverrideSchema(newSchema);
@@ -106,7 +106,7 @@ namespace EasyInstall
          // Check for Write Permissions on the destination directory
          try
          {
-            FileIOPermission fp = new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.Write, DestinationFolder);
+            var fp = new FileIOPermission(FileIOPermissionAccess.Read | FileIOPermissionAccess.Write, DestinationFolder);
 
             fp.Demand();
          }
@@ -218,7 +218,7 @@ namespace EasyInstall
 
       protected override void Dispose(bool disposing)
       {
-         if ( !disposed )
+         if ( !Disposed )
          {
             if ( disposing )
             {

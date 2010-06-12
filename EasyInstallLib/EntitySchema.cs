@@ -94,8 +94,8 @@ namespace EasyInstall
 
       public IMutableEntitySchema Copy()
       {
-         NetDataContractSerializer sr = new NetDataContractSerializer();
-         using ( MemoryStream ms = new MemoryStream() )
+         var sr = new NetDataContractSerializer();
+         using ( var ms = new MemoryStream() )
          {
             sr.WriteObject(ms, this);
             ms.Seek(0, SeekOrigin.Begin);
@@ -104,18 +104,18 @@ namespace EasyInstall
          }
       }
 
-      public void AddAttribute(string attributeName, SchemaItemInfo SchemaItemInfo)
+      public void AddAttribute(string attributeName, SchemaItemInfo schemaItemInfo)
       {
-         CheckTypeCompatibility(SchemaItemInfo);
+         CheckTypeCompatibility(schemaItemInfo);
 
          if (_schema.ContainsKey(attributeName))
          {
             throw new DuplicateSchemaItemException(attributeName);
          }
 
-         _schema.Add(new KeyValuePair<string, SchemaItemInfo>(attributeName, SchemaItemInfo));
+         _schema.Add(new KeyValuePair<string, SchemaItemInfo>(attributeName, schemaItemInfo));
 
-         FireAttributeAddedEvent(attributeName, SchemaItemInfo);
+         FireAttributeAddedEvent(attributeName, schemaItemInfo);
       }
 
       public void RemoveAttribute(string attributeName)
@@ -149,9 +149,9 @@ namespace EasyInstall
       }
 
       // Check if the defaultvalue is compatible with the type
-      public static void CheckTypeCompatibility(object o, SchemaItemInfo SchemaItemInfo)
+      public static void CheckTypeCompatibility(object o, SchemaItemInfo schemaItemInfo)
       {
-         if (!SchemaItemInfo.AllowNull && o == null)
+         if (!schemaItemInfo.AllowNull && o == null)
          {
             throw new Exception("Value cannot be null");
          }
@@ -160,28 +160,31 @@ namespace EasyInstall
             return;
          try
          {
-            if ( SchemaItemInfo.ItemType == typeof(object) )
+            if ( schemaItemInfo.ItemType == typeof(object) )
                return;
          }
          catch ( Exception e )
          {
-            System.Diagnostics.Trace.WriteLine("Error while loading type {0}", SchemaItemInfo.TypeName);
+            System.Diagnostics.Trace.WriteLine("Error while loading type {0}", schemaItemInfo.TypeName);
             System.Diagnostics.Trace.WriteLine(e.ToString());
             throw;
          }
 
-         if (o.GetType() != SchemaItemInfo.ItemType)
+         if (o.GetType() != schemaItemInfo.ItemType)
          {
-            object convertedObj = Convert.ChangeType(o, SchemaItemInfo.ItemType);
+            var convertedObj = Convert.ChangeType(o, schemaItemInfo.ItemType);
 
             if (convertedObj == null)
                throw new Exception("Incompatible types");
          }
       }
 
-      public static void CheckTypeCompatibility(SchemaItemInfo SchemaItemInfo)
+      public static void CheckTypeCompatibility(SchemaItemInfo schemaItemInfo)
       {
-         CheckTypeCompatibility(SchemaItemInfo.DefaultValue, SchemaItemInfo);
+         if (schemaItemInfo == null) 
+            throw new ArgumentNullException("schemaItemInfo");
+
+         CheckTypeCompatibility(schemaItemInfo.DefaultValue, schemaItemInfo);
       }
 
       #region ISerializable Members - NOT USED AT PRESENT

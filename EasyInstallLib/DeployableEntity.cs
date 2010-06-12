@@ -435,7 +435,7 @@ namespace EasyInstall
 
       #region Dispose Pattern
 
-      protected bool disposed { get; private set; }
+      protected bool Disposed { get; private set; }
 
       public void Dispose()
       {
@@ -446,7 +446,7 @@ namespace EasyInstall
 
       protected virtual void Dispose(bool disposing)
       {
-         if (!disposed)
+         if (!Disposed)
          {
             if (disposing)
             {
@@ -469,7 +469,7 @@ namespace EasyInstall
                _subEntities.DisposeAndClear();
             }
 
-            disposed = true;
+            Disposed = true;
 
             Trace.WriteLine(string.Format("Disposed: Deployable entity {0}", ToString()));
          }

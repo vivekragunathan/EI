@@ -1,0 +1,12 @@
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\bin\Debug\EasyInstallLib.dll
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\bin\Debug\EasyInstallLib.pdb
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\bin\Debug\EasyInstallInterfaces.dll
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\bin\Debug\ICSharpCode.SharpZipLib.dll
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\bin\Debug\EasyInstallInterfaces.pdb
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\obj\Debug\EasyInstallLib.g.resources
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\obj\Debug\EasyInstall.Properties.Resources.resources
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\obj\Debug\GenerateResource.read.1.tlog
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\obj\Debug\GenerateResource.write.1.tlog
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\obj\Debug\EasyInstallLib.dll
+C:\Users\Sanju\Projects\EasyInstall\EasyInstallLib\obj\Debug\EasyInstallLib.pdb
