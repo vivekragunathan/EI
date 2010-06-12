@@ -99,6 +99,7 @@
     <Compile Include="RegistrationHelper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="PostBuild.bat" />
   </ItemGroup>
   <ItemGroup>
