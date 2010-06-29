@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using EasyInstall.Interfaces;
-using System.IO;
 using System.Diagnostics;
-using System.Security.Permissions;
-using System.Security;
+using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Security;
+using System.Security.Permissions;
+using EasyInstall.Interfaces;
 using EasyInstall.Interfaces.Entities;
 
 namespace EasyInstall
@@ -19,12 +18,67 @@ namespace EasyInstall
       {
       }
 
+      public FileEntity(string name, IPackage package, Guid parentID, object createParams)
+         : base(name, EntityTypes.FILEENTITY, package, parentID)
+      {
+         if (parentID == Package.ID)
+         {
+            var newSchema = (EntitySchema) ((IMutableEntitySchema) Schema).Copy();
+            SchemaItemInfo itemInfo = newSchema.Attributes.First((e) => e.Key == "DestinaltionPath").Value;
+            itemInfo.IsReadonly = false;
+
+            OverrideSchema(newSchema);
+         }
+
+         if (createParams != null)
+         {
+            SetAttribute("SourcePath", createParams);
+
+            Trace.WriteLine("Entity created. source Path: " + SourcePath);
+         }
+
+         Parent.OnAttributeChanged += Parent_OnAttributeChanged;
+
+         if (Parent.Attributes.Any((e) => e.Key == "DestinationFolder"))
+         {
+            UpdateDestination(Parent.GetAttribute<string>("DestinationFolder"));
+         }
+      }
+
+      private string SourcePath
+      {
+         get
+         {
+            var path = GetAttribute<string>("SourcePath");
+
+            if (!File.Exists(path))
+               throw new FileNotFoundException("Invalid Source path", path);
+
+            return path;
+         }
+      }
+
+      private string DestinationPath
+      {
+         get { return GetAttribute<string>("DestinationPath"); }
+      }
+
+      private bool Register
+      {
+         get { return GetAttribute<bool>("Register"); }
+      }
+
+      private bool IsService
+      {
+         get { return GetAttribute<bool>("IsService"); }
+      }
+
       protected override void OnParentDeserialized(IEntity entity)
       {
          RegisterForEvents();
       }
 
-      void RegisterForEvents()
+      private void RegisterForEvents()
       {
          // Register for attibute changed event of parent
 
@@ -32,86 +86,22 @@ namespace EasyInstall
 
          parent.OnAttributeChanged += Parent_OnAttributeChanged;
 
-         if ( parent.Attributes.Any((e) => e.Key == "DestinationFolder") )
+         if (parent.Attributes.Any(e => e.Key == "DestinationFolder"))
          {
             UpdateDestination(parent.GetAttribute<string>("DestinationFolder"));
          }
       }
 
-      string SourcePath
-      {
-         get
-         {
-            string path = GetAttribute<string>("SourcePath");
-
-            if ( !File.Exists(path) )
-               throw new FileNotFoundException("Invalid Source path", path);
-
-            return path;
-         }
-      }
-
-      string DestinationPath
-      {
-         get
-         {
-            return GetAttribute<string>("DestinationPath");
-         }
-      }
-
-      bool Register
-      {
-         get
-         {
-            return GetAttribute<bool>("Register");
-         }
-      }
-
-      bool IsService
-      {
-         get
-         {
-            return GetAttribute<bool>("IsService");
-         }
-      }
-
-      public FileEntity(string name, IPackage package, Guid parentID, object createParams)
-         :base(name, EntityTypes.FILEENTITY, package, parentID)
-      {
-         if ( parentID == Package.ID )
-         {
-            EntitySchema newSchema = (EntitySchema)(Schema as IMutableEntitySchema).Copy();
-            SchemaItemInfo itemInfo = newSchema.Attributes.First((e) => e.Key == "DestinaltionPath").Value;
-            itemInfo.IsReadonly = false;
-
-            OverrideSchema(newSchema);
-         }
-
-         if ( createParams != null )
-         {
-            SetAttribute("SourcePath", createParams);
-
-            System.Diagnostics.Trace.WriteLine("Entity created. source Path: " + SourcePath);
-         }
-
-         Parent.OnAttributeChanged += Parent_OnAttributeChanged;
-
-         if ( Parent.Attributes.Any((e) => e.Key == "DestinationFolder") )
-         {
-            UpdateDestination(Parent.GetAttribute<string>("DestinationFolder"));
-         }
-      }
-
-      void UpdateDestination(string destFolder)
+      private void UpdateDestination(string destFolder)
       {
          string destPath = Path.Combine(destFolder, GetAttribute<string>("FileName"));
 
          SetAttribute("DestinationPath", destPath);
       }
 
-      void Parent_OnAttributeChanged(object sender, EntityAttributeEventArgs e)
+      private void Parent_OnAttributeChanged(object sender, EntityAttributeEventArgs e)
       {
-         if ( e.AttributeName == "DestinationFolder" )
+         if (e.AttributeName == "DestinationFolder")
          {
             // Modify the Destination folder of this folder according to the
             // parent entity's attribute
@@ -122,25 +112,51 @@ namespace EasyInstall
 
       protected override void AttributeChanged(EntityAttributeEventArgs e)
       {
-         if ( e.AttributeName == "FileName" )
+         if (e.AttributeName == "FileName")
          {
             UpdateDestination(Path.GetDirectoryName(GetAttribute<string>("DestinationPath")));
          }
       }
 
+      public override string ToString()
+      {
+         return String.Format("Entity Name: {0}, Description: {1}", Name, GetAttribute("SourcePath"));
+      }
+
+      #region Actions
+
+      private static void RegisterCOM(FileEntity e)
+      {
+         // TODO: 
+         Trace.WriteLine(string.Format("Registering COM Component '{0}' '{1}' - '{2}'",
+                                       e.Name,
+                                       e.ID, e.DestinationPath));
+      }
+
+      private static void InstallService(FileEntity e)
+      {
+         // TODO: 
+         Trace.WriteLine(string.Format("Installing Service'{0}' '{1}' - '{2}'",
+                                       e.Name,
+                                       e.ID, e.DestinationPath));
+      }
+
+      #endregion
+
       #region OVERRIDES
+
       public override bool CanBeDeployed()
       {
          try
          {
-            FileIOPermission fp = new FileIOPermission(FileIOPermissionAccess.Read 
-               | FileIOPermissionAccess.Write, DestinationPath);
+            var fp = new FileIOPermission(FileIOPermissionAccess.Read
+                                          | FileIOPermissionAccess.Write, DestinationPath);
 
             fp.Demand();
          }
-         catch ( SecurityException e )
+         catch (SecurityException e)
          {
-            System.Diagnostics.Trace.WriteLine(e.ToString());
+            Trace.WriteLine(e.ToString());
             return false;
          }
 
@@ -153,20 +169,20 @@ namespace EasyInstall
          {
             CanBeDeployed();
 
-            string folder = Path.GetDirectoryName(DestinationPath);
+            var folderName = Path.GetDirectoryName(DestinationPath);
 
-            if (!Directory.Exists(folder))
+            if (!Directory.Exists(folderName))
             {
-               Directory.CreateDirectory(folder);
+               Directory.CreateDirectory(folderName);
             }
 
             // Copy the data in stream as the destination file
-            using (Stream s = Package.GetData(ID))
-            using (FileStream fs = File.Create(DestinationPath))
+            using (var s = Package.GetData(ID))
+            using (var fs = File.Create(DestinationPath))
             {
                s.CopyTo(fs);
 
-               System.Diagnostics.Trace.WriteLine(string.Format("File {0} deployed successfully!", DestinationPath));
+               Trace.WriteLine(string.Format("File {0} deployed successfully!", DestinationPath));
             }
          }
          catch (Exception)
@@ -175,7 +191,7 @@ namespace EasyInstall
          }
       }
 
-      void Package_OnDeployed(object sender, EntityEventArgs e)
+      private void Package_OnDeployed(object sender, EntityEventArgs e)
       {
          try
          {
@@ -199,14 +215,14 @@ namespace EasyInstall
       {
          try
          {
-            if ( File.Exists(DestinationPath) )
+            if (File.Exists(DestinationPath))
             {
                File.Delete(DestinationPath);
             }
          }
-         catch(Exception e)
+         catch (Exception e)
          {
-            System.Diagnostics.Trace.Write(string.Format("Error deleting entity: {0} - {1}", ToString(), e.ToString()));
+            Trace.Write(string.Format("Error deleting entity: {0} - {1}", ToString(), e));
             throw;
          }
       }
@@ -216,30 +232,6 @@ namespace EasyInstall
          // Create a file stream from the source
          return new FileStream(SourcePath, FileMode.Open);
       }
-      #endregion
-
-      public override string ToString()
-      {
-         return String.Format("Entity Name: {0}, Description: {1}", Name, GetAttribute("SourcePath"));
-      }
-
-      #region Actions
-      void RegisterCOM(IDeployableEntity e)
-      {
-         // TODO: 
-         Trace.WriteLine(string.Format("Registering COM Component '{0}' '{1}' - '{2}'", 
-            e.Name, 
-            e.ID, (e as FileEntity).DestinationPath));
-      }
-
-      void InstallService(IDeployableEntity e)
-      {
-         // TODO: 
-         Trace.WriteLine(string.Format("Installing Service'{0}' '{1}' - '{2}'", 
-            e.Name, 
-            e.ID, (e as FileEntity).DestinationPath));
-      }
-
 
       #endregion
    }

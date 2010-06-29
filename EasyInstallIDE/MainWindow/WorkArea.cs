@@ -17,7 +17,7 @@ namespace EasyInstallIDE
    /// <summary>
    /// Interaction logic for Window1.xaml
    /// </summary>
-   public partial class Window1 : Window
+   public partial class Window1
    {
       #region Context menu
 
@@ -189,12 +189,12 @@ namespace EasyInstallIDE
 
       private void TreeWorkArea_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
       {
-
+         
       }
 
       #region DRAG N DROP
 
-      IList<string> draggedEntites;
+      IList<string> _draggedEntites;
 
       private void TreeWorkArea_GiveFeedback(object sender, GiveFeedbackEventArgs e)
       {
@@ -217,21 +217,23 @@ namespace EasyInstallIDE
 
       private void TreeWorkArea_DragEnter(object sender, DragEventArgs e)
       {
-         draggedEntites = new List<string>();
+         _draggedEntites = new List<string>();
 
-         string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+         var files = e.Data.GetData(DataFormats.FileDrop) as string[];
+
+         if (files == null) return;
 
          foreach ( var item in files )
          {
             if ( Directory.Exists(item) )
             {
-               draggedEntites.Add(EntityTypes.FOLDERENTITY);
+               _draggedEntites.Add(EntityTypes.FOLDERENTITY);
                continue;
             }
 
             if ( File.Exists(item) )
             {
-               draggedEntites.Add(EntityTypes.FILEENTITY);
+               _draggedEntites.Add(EntityTypes.FILEENTITY);
             }
          }
       }
@@ -246,21 +248,24 @@ namespace EasyInstallIDE
             {
                if ( evm != null )
                {
-                  string[] files = e.Data.GetData(DataFormats.FileDrop) as string[];
+                  var files = e.Data.GetData(DataFormats.FileDrop) as string[];
 
-                  foreach ( var item in files )
+                  if (files != null)
                   {
-                     if ( Directory.Exists(item) )
+                     foreach (var item in files)
                      {
-                        IEntity subEntity = evm.Entity.CreateChild(EntityTypes.FOLDERENTITY, Path.GetFileName(item));
-                        subEntity.SetAttribute("SourceFolder", item);
-                        continue;
-                     }
+                        if (Directory.Exists(item))
+                        {
+                           IEntity subEntity = evm.Entity.CreateChild(EntityTypes.FOLDERENTITY, Path.GetFileName(item));
+                           subEntity.SetAttribute("SourceFolder", item);
+                           continue;
+                        }
 
-                     if ( File.Exists(item) )
-                     {
-                        IEntity subEntity = evm.Entity.CreateChild(EntityTypes.FILEENTITY, Path.GetFileName(item));
-                        subEntity.SetAttribute("SourcePath", item);
+                        if (File.Exists(item))
+                        {
+                           IEntity subEntity = evm.Entity.CreateChild(EntityTypes.FILEENTITY, Path.GetFileName(item));
+                           subEntity.SetAttribute("SourcePath", item);
+                        }
                      }
                   }
                }
@@ -268,7 +273,7 @@ namespace EasyInstallIDE
          }
          finally
          {
-            draggedEntites = null;
+            _draggedEntites = null;
          }
       }
 
@@ -278,12 +283,12 @@ namespace EasyInstallIDE
          EntityViewModel evm = null;
          entityVM = null;
 
-         if (draggedEntites == null)
+         if (_draggedEntites == null)
             return false;
 
          HitTestResult htr = VisualTreeHelper.HitTest(TreeWorkArea, e.GetPosition(TreeWorkArea));
 
-         TreeViewItem tvItem = htr.VisualHit.FindVisualParent<TreeViewItem>();
+         var tvItem = htr.VisualHit.FindVisualParent<TreeViewItem>();
 
          if ( null == tvItem )
             return false;
@@ -295,7 +300,7 @@ namespace EasyInstallIDE
 
          entityVM = evm;
 
-         return draggedEntites.All((en) => evm.Entity.Schema.SupportedEntityTypes.Contains(en));
+         return _draggedEntites.All((en) => evm.Entity.Schema.SupportedEntityTypes.Contains(en));
       }
 
       #endregion

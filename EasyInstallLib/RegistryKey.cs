@@ -8,16 +8,37 @@ using Microsoft.Win32;
 namespace EasyInstall
 {
    [DataContract]
-   class RegistryKey : DeployableEntity
+   class RegKey : DeployableEntity
    {
+      public RegistryHive Hive
+      {
+         get
+         {
+            return GetAttribute<RegistryHive>("Hive");
+         }
+      }
+
+      public string Path
+      {
+         get
+         {
+            return GetAttribute<string>("Path");
+         }
+      }
+
       public override bool CanBeDeployed()
       {
-         throw new NotImplementedException();
+         
       }
 
       protected override void OnDeploy()
       {
-         throw new NotImplementedException();
+         RegistryKey rk = RegistryKey.OpenBaseKey(Hive, RegistryView.Registry32);
+
+         if (null != rk)
+         {
+            rk.CreateSubKey(Path);
+         }
       }
 
       protected override void OnUndeploy()
